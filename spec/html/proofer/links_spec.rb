@@ -306,4 +306,10 @@ describe "Links test" do
     proofer = make_proofer(fixture)
     expect(proofer.failed_tests).to eq []
   end
+
+  it "passes for a nested link to a zip file" do
+    fixture = "#{FIXTURES_DIR}/links/linkToZipFile.html"
+    proofer = make_proofer(fixture)
+    expect(proofer.failed_tests).to eq []
+  end
 end
