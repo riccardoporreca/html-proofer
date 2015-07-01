@@ -86,6 +86,9 @@ module HTML
           queue_request(:get, href, filenames)
         else
           return if @options[:only_4xx] && !response_code.between?(400, 499)
+          if response_code == 404 && @options[:follow_clientside_redirect]
+            ap response.response_body
+          end
           # Received a non-successful http response.
           add_failed_tests filenames, "External link #{href} failed: #{response_code} #{response.return_message}", response_code
         end

@@ -49,7 +49,8 @@ module HTML
         :directory_index_file => 'index.html',
         :check_html => false,
         :error_sort => :path,
-        :checks_to_ignore => []
+        :checks_to_ignore => [],
+        :follow_clientside_redirect => false
       }
 
       @typhoeus_opts = TYPHOEUS_DEFAULTS.merge(opts[:typhoeus] || {})

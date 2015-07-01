@@ -361,4 +361,17 @@ describe 'Links test' do
     proofer = run_proofer(fixture)
     expect(proofer.failed_tests).to eq []
   end
+
+  it 'fails if not asked to follow client-side redirect' do
+    fixture = "#{FIXTURES_DIR}/links/clientside_redirect.html"
+    proofer = run_proofer(fixture)
+    expect(proofer.failed_tests).to match('404')
+  end
+
+  it 'passes if asked to follow client-side redirect' do
+    options = { :follow_clientside_redirect => true }
+    fixture = "#{FIXTURES_DIR}/links/clientside_redirect.html"
+    proofer = run_proofer(fixture, options)
+    expect(proofer.failed_tests).to eq []
+  end
 end
