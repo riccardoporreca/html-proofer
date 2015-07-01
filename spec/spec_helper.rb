@@ -1,7 +1,7 @@
 require 'bundler/setup'
-require_relative "../lib/html/proofer"
+require_relative '../lib/html/proofer'
 
-FIXTURES_DIR = "spec/html/proofer/fixtures"
+FIXTURES_DIR = 'spec/html/proofer/fixtures'
 
 RSpec.configure do |config|
   # Use color in STDOUT
@@ -19,15 +19,15 @@ end
 
 def capture_stderr(*)
   original_stderr = $stderr
-  original_stdout = $stdout
+  # original_stdout = $stdout
   $stderr = fake_err = StringIO.new
-  $stdout = fake_out = StringIO.new
+  # $stdout = fake_out = StringIO.new
   begin
     yield
   rescue RuntimeError
   ensure
     $stderr = original_stderr
-    $stdout = original_stdout
+    # $stdout = original_stdout
   end
   fake_err.string
 end
