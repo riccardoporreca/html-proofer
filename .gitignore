@@ -24,3 +24,5 @@ docs/
 _yardoc
 doc/
 .DS_Store
+
+spec/html-proofer/fixtures/cache/.multiple.log

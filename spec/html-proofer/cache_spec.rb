@@ -35,6 +35,36 @@ describe 'Cache test' do
     }.to raise_error ArgumentError
   end
 
+  it 'properly reports failure on multiple pages' do
+    cache_file = File.join(storage_dir, '.multiple.log')
+    FileUtils.rm(cache_file) if File.exist?(cache_file)
+    FileUtils.rm_rf('./tmp/files')
+    FileUtils.mkdir_p('./tmp/files')
+
+    text = %|<a href="https://www.whatever-broken.crap">I broke</a>%|
+    File.write('./tmp/files/broken1.html', text)
+    File.write('./tmp/files/broken2.html', text)
+    run_proofer('./tmp/files', :directory, { :cache => { :timeframe => '3d', :cache_file => '.multiple.log' }.merge(default_cache_options) })
+
+    log = read_cache(cache_file)
+    failures = log.values.select { |l| l["status"] == 0 }
+    expect(failures.length).to eq(1)
+    expect(failures.first["filenames"].length).to eq(2)
+    expect(failures.first["filenames"].first).to eq("./tmp/files/broken1.html")
+    expect(failures.first["filenames"].last).to eq("./tmp/files/broken2.html")
+
+    text = %|<a href="https://www.github.com">I broke</a>%|
+    File.write('./tmp/files/broken1.html', text)
+
+    run_proofer('./tmp/files', :directory, { :cache => { :timeframe => '3d', :cache_file => '.multiple.log' }.merge(default_cache_options) })
+
+    log = read_cache(cache_file)
+    failures = log.values.select { |l| l["status"] == 0 }
+    expect(failures.length).to eq(1)
+    expect(failures.first["filenames"].length).to eq(1)
+    expect(failures.first["filenames"].first).to eq("./tmp/files/broken2.html")
+  end
+
   context "within date" do
     let(:cache_file_name) { ".within_date.log" }
 
