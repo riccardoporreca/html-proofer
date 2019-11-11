@@ -146,6 +146,12 @@ describe 'Links test' do
     expect(proofer.failed_tests).to eq []
   end
 
+  it 'ignores parents marked as ignore data-proofer-ignore' do
+    ignorable_links = "#{FIXTURES_DIR}/links/ignorable_parents.html"
+    proofer = run_proofer(ignorable_links, :file)
+    expect(proofer.failed_tests).to eq []
+  end
+
   it 'ignores links via url_ignore' do
     ignorable_links = "#{FIXTURES_DIR}/links/ignorable_links_via_options.html"
     proofer = run_proofer(ignorable_links, :file, url_ignore: [%r{^http://}, /sdadsad/, '../whaadadt.html'])
