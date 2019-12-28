@@ -124,4 +124,11 @@ describe 'Html test' do
     proofer = run_proofer(file, :file, opts)
     expect(proofer.failed_tests).to eq []
   end
+
+  it 'should fail bogus doc' do
+    opts = { check_html: true }
+    file = "#{FIXTURES_DIR}/html/invalid_file.html"
+    proofer = run_proofer(file, :file, opts)
+    expect(proofer.failed_tests).to eq []
+  end
 end
