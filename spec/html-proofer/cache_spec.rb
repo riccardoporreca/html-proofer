@@ -179,7 +179,7 @@ describe 'Cache test' do
       expect_any_instance_of(HTMLProofer::Cache).to receive(:add)
 
       # ...even though we are within the 30d time frame, because it's a failure
-      run_proofer(['http://www.foofoofoo.biz'], :links, cache: { timeframe: '30d', cache_file: cache_file_name }.merge(default_cache_options))
+      run_proofer(['www.foofoofoo.biz'], :links, cache: { timeframe: '30d', cache_file: cache_file_name }.merge(default_cache_options))
 
       Timecop.return
     end
