@@ -174,7 +174,6 @@ describe 'Cache test' do
       new_time = Time.local(2015, 10, 20, 12, 0, 0)
       Timecop.freeze(new_time)
 
-      expect_any_instance_of(HTMLProofer::Cache).to receive(:write)
       # we expect the same link to be readded...
       expect_any_instance_of(HTMLProofer::Cache).to receive(:add)
 
