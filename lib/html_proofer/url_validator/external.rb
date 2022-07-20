@@ -24,10 +24,12 @@ module HTMLProofer
       def validate
         if @cache.enabled?
           urls_to_check = @runner.load_external_cache
-          run_external_link_checker(urls_to_check)
         else
-          run_external_link_checker(@external_urls)
+          urls_to_check = @external_urls
         end
+        run_external_link_checker(urls_to_check)
+        urls_detected = pluralize(urls_to_check.count, "external link", "external links")
+        @logger.log(:info, "Checking #{urls_detected}")
 
         @failed_checks
       end

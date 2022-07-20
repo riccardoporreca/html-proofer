@@ -73,9 +73,14 @@ module HTMLProofer
     end
 
     def detect_url_changes(urls_detected, type)
+      determine_deletions(urls_detected, type)
+
       additions = determine_additions(urls_detected, type)
 
-      determine_deletions(urls_detected, type)
+      # nothing in the cache for what needs to be added: this would clean what was in the cache but not found
+      @cache_log[type].delete_if do |url, _|
+        additions.include?(url)
+      end
 
       additions
     end
@@ -95,13 +100,6 @@ module HTMLProofer
       end
 
       urls_to_check = detect_url_changes(urls_detected, type)
-
-      @cache_log[type].each_pair do |url, cache|
-        within_timeframe = type == :external ? within_external_timeframe?(cache[:time]) : within_internal_timeframe?(cache[:time])
-        next if within_timeframe
-
-        urls_to_check[url] = cache[:metadata] # recheck expired links
-      end
 
       urls_to_check
     end
@@ -175,8 +173,9 @@ module HTMLProofer
           @logger.log(:debug, "Adding #{incoming_url} to internal cache")
           arr << incoming_url
         end
-
-        hsh[url] = incoming_metadata
+        if !incoming_metadata.empty?
+          hsh[url] = metadata
+        end
       end
     end
 
@@ -184,8 +183,12 @@ module HTMLProofer
     private def determine_deletions(urls_detected, type)
       deletions = 0
 
-      @cache_log[type].delete_if do |url, _|
-        if urls_detected.include?(url)
+
+      @cache_log[type].delete_if do |url, cache|
+        within_timeframe = type == :external ? within_external_timeframe?(cache[:time]) : within_internal_timeframe?(cache[:time])
+        if !within_timeframe
+          true
+        elsif urls_detected.include?(url) && within_timeframe
           false
         elsif url_matches_type?(url, type)
           @logger.log(:debug, "Removing #{url} from #{type} cache")

@@ -14,10 +14,13 @@ module HTMLProofer
       def validate
         if @cache.enabled?
           urls_to_check = @runner.load_internal_cache
-          run_internal_link_checker(urls_to_check)
         else
-          run_internal_link_checker(@internal_urls)
+          urls_to_check = @internal_urls
         end
+        run_internal_link_checker(urls_to_check)
+        urls_detected = pluralize(urls_to_check.count, "internal link", "internal links")
+        @logger.log(:info, "Checking #{urls_detected}")
+
 
         @failed_checks
       end
