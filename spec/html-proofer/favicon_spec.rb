@@ -62,7 +62,7 @@ describe HTMLProofer::Check::Favicon do
   end
 
   it "passes for present favicon dir check" do
-    present = File.join(FIXTURES_DIR, "nested")
+    present = File.join(FIXTURES_DIR, "favicon", "nested")
     proofer = run_proofer(present, :directory, checks: ["Favicon"])
     expect(proofer.failed_checks).to(eq([]))
   end
