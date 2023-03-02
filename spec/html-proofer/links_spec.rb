@@ -718,6 +718,12 @@ describe HTMLProofer::Check::Links do
     expect(proofer.failed_checks).to(eq([]))
   end
 
+  it "works for a parent relative link through directory" do
+    dir = File.join(FIXTURES_DIR, "links", "relative")
+    proofer = run_proofer(dir, :directory)
+    expect(proofer.failed_checks).to(eq([]))
+  end
+
   it "knows how to find internal link with additional sources" do
     empty_dir = File.join(FIXTURES_DIR, "links", "same_name_as_dir")
     valid_dir = File.join(FIXTURES_DIR, "links", "internals")
